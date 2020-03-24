@@ -26,7 +26,7 @@ class ofApp : public ofBaseApp {
         vector<string> fontsList;
         vector<ofTrueTypeFont> fonts;
 		void initFonts();
-		void refreshFonts();
+		void refreshFont();
 
         int fontSelector;
     
@@ -67,11 +67,12 @@ class ofApp : public ofBaseApp {
 		bool keyIsAlt(int key);
 		bool keyIsShift(int key);
 		bool keyIsModifier(int key);
-		bool keyIsControlOrCommand(int key);
 
 		void textStartPoint(int key);
 
 		void saveSettings();
+
+		void init();
 
 };
 

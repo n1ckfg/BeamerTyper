@@ -29,7 +29,7 @@ void ofApp::setup() {
 	loadKeystoneSettings();
 
     keystoneStep = 10;
-    keystoneIndex = 0; // upper left
+    keystoneIndex = 2; // upper left
     keystoneHandleColor = ofColor(255,0,0);
     keystoneHandleSize = 50;
     keystoneHandleStroke = 10;
@@ -107,10 +107,6 @@ void ofApp::draw() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
-	if (key == OF_KEY_HOME || key == OF_KEY_END) {
-		saveSettings();
-	}
-
     if (modeSelector == EDIT) {
         if (key == OF_KEY_DEL || key == OF_KEY_BACKSPACE) {
             if (displayString.length() > 0) {
@@ -118,8 +114,6 @@ void ofApp::keyPressed(int key) {
             }
 		} else if (key == OF_KEY_RETURN) {
 			displayString = "";
-		} else if (keyIsNumber(key)) {
-			modeSelector = KEYSTONE;
 		} else if (keyIsArrow(key)) {
 			textStartPoint(key);
 		} else if (key == OF_KEY_TAB || key == OF_KEY_PAGE_UP || key == OF_KEY_PAGE_DOWN || keyIsModifier(key)) { 
@@ -129,36 +123,38 @@ void ofApp::keyPressed(int key) {
 		}
     } else if (modeSelector == KEYSTONE) {
         if (key == '1') {
-            keystoneIndex = 0;
-        } else if (key == '2') {
-            keystoneIndex = 1;
-        } else if (key == '3') {
             keystoneIndex = 2;
-        } else if (key == '4') {
+        } else if (key == '2') {
             keystoneIndex = 3;
-        } else if (key == '5') {
-            loadKeystoneVertsOrig();
-			fontLeftMargin = fontLeftMarginOrig * (float)width;
-			fontTopMargin = fontTopMarginOrig * (float)height;
-			fontSelector = 0;
-			fontSize = fontSizeOrig;
+        } else if (key == '3') {
+            keystoneIndex = 0;
+        } else if (key == '4') {
+            keystoneIndex = 1;
         } else if (keyIsArrow(key)) {
             keystoneVertex(keystoneIndex, key);
-        } else if (!keyIsNumber(key)) {
+        } else if (!keyIsNumber(key) && key != OF_KEY_END) {
             modeSelector = EDIT;
         }
     }
 }
 
 void ofApp::keyReleased(int key) {
+	if (key == OF_KEY_HOME) {
+		saveSettings();
+	} else if (key == OF_KEY_END) {
+		init();
+	} else if (keyIsAlt(key)) {
+		modeSelector = KEYSTONE;
+	}
+
 	if (modeSelector == EDIT) {
 		if (key == OF_KEY_PAGE_DOWN) {
 			fontSize -= fontSizeChangeIncrement;
 			if (fontSize < 10) fontSize = 10;
-			refreshFonts();
+			refreshFont();
 		} else if (key == OF_KEY_PAGE_UP) {
 			fontSize += fontSizeChangeIncrement;
-			refreshFonts();
+			refreshFont();
 		} else if (key == OF_KEY_TAB) {
 			fontSelector++;
 			if (fontSelector > fonts.size() - 1) fontSelector = 0;
@@ -268,7 +264,7 @@ void ofApp::initFonts() {
     }
 }
 
-void ofApp::refreshFonts() {
+void ofApp::refreshFont() {
 	fonts[fontSelector].loadFont(fontsList[fontSelector], fontSize, true, true);
 }
 
@@ -330,14 +326,6 @@ bool ofApp::keyIsModifier(int key) {
 	}
 }
 
-bool ofApp::keyIsControlOrCommand(int key) {
-	if (keyIsControl(key) || keyIsCommand(key)) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
 void ofApp::saveSettings() {
 	saveKeystoneSettings();
 	settings.setValue("settings:font_left_margin", fontLeftMargin / (float) width);
@@ -347,4 +335,13 @@ void ofApp::saveSettings() {
 	settings.setValue("settings:display_string", displayString);
 
 	settings.saveFile("settings.xml");
+}
+
+void ofApp::init() {
+	loadKeystoneVertsOrig();
+	fontLeftMargin = fontLeftMarginOrig * (float)width;
+	fontTopMargin = fontTopMarginOrig * (float)height;
+	fontSelector = 0;
+	fontSize = fontSizeOrig;
+	initFonts();
 }
