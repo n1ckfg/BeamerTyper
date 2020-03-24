@@ -224,10 +224,10 @@ void ofApp::loadKeystoneSettings() {
 	float x3 = (float) settings.getValue("settings:key_x3", 1) * (float) halfWidth;
 	float y3 = (float) settings.getValue("settings:key_y3", 1) * (float) halfHeight;
 
-	ofVec3f v2 = ofVec3f(x0, y0, 0);
-	ofVec3f v3 = ofVec3f(x1, y1, 0);
-	ofVec3f v0 = ofVec3f(x2, y2, 0);
-	ofVec3f v1 = ofVec3f(x3, y3, 0);
+	ofVec3f v0 = ofVec3f(x0, y0, 0);
+	ofVec3f v1 = ofVec3f(x1, y1, 0);
+	ofVec3f v2 = ofVec3f(x2, y2, 0);
+	ofVec3f v3 = ofVec3f(x3, y3, 0);
 
 	plane1.getMesh().setVertex(0, v0);
 	plane1.getMesh().setVertex(1, v1);
