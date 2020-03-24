@@ -200,7 +200,6 @@ void ofApp::keystoneVertex(int index, int key) {
 		if (i != index) {
 			ofVec3f v2 = plane1.getMesh().getVertex(i);
 			float s = (((float)width - v1.distance(v2)) / (float)width) * 0.001;
-			cout << s << endl;
 			float x = ofLerp(v2.x, v1.x, s);
 			float y = ofLerp(v2.y, v1.y, s);
 

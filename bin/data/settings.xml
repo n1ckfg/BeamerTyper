@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <settings>
-    <key_x0>-0.895833313</key_x0>
-    <key_y0>-0.666666687</key_y0>
-    <key_x1>0.885416687</key_x1>
-    <key_y1>-0.233333334</key_y1>
-    <key_x2>-0.927083313</key_x2>
-    <key_y2>0.883333325</key_y2>
-    <key_x3>0.958333313</key_x3>
-    <key_y3>0.800000012</key_y3>
-    <font_left_margin>0.096874997</font_left_margin>
-    <font_top_margin>0.508333325</font_top_margin>
-    <font_selector>1</font_selector>
-    <font_size>104</font_size>
+    <key_x0>-1.000000000</key_x0>
+    <key_y0>-1.000000000</key_y0>
+    <key_x1>1.000000000</key_x1>
+    <key_y1>-1.000000000</key_y1>
+    <key_x2>-1.000000000</key_x2>
+    <key_y2>1.000000000</key_y2>
+    <key_x3>1.000000000</key_x3>
+    <key_y3>1.000000000</key_y3>
+    <font_left_margin>0.050000001</font_left_margin>
+    <font_top_margin>0.500000000</font_top_margin>
+    <font_selector>0</font_selector>
+    <font_size>72</font_size>
     <display_string>Testing testing 1 2 3.....</display_string>
 </settings>
