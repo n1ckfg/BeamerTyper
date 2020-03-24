@@ -35,6 +35,9 @@ class ofApp : public ofBaseApp {
         float fontLineHeight;
         int fontLeftMargin;
         int fontTopMargin;
+		float fontLeftMarginOrig = 0.05;
+		float fontTopMarginOrig = 0.5;
+		int fontSizeOrig = 72;
         int fontSizeChangeIncrement;
     
         // ~ ~ ~ ~ ~ ~ ~

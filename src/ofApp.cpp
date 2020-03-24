@@ -37,7 +37,7 @@ void ofApp::setup() {
 
     bgColor = ofColor(0);
     
-    fontSize = settings.getValue("settings:font_size", 72);
+    fontSize = settings.getValue("settings:font_size", fontSizeOrig);
     fontLineHeight = 68.0f;
     fontLetterSpacing = 1.035;
     fontSelector = settings.getValue("settings:font_selector", 0);
@@ -51,8 +51,8 @@ void ofApp::setup() {
     
     initFonts();   
   
-    fontLeftMargin = (float) width * settings.getValue("settings:font_left_margin", 0.05);
-    fontTopMargin = (float) height * settings.getValue("settings:font_top_margin", 0.5);
+    fontLeftMargin = (float) width * settings.getValue("settings:font_left_margin", fontLeftMarginOrig);
+    fontTopMargin = (float) height * settings.getValue("settings:font_top_margin", fontTopMarginOrig);
     
     fontColor = ofColor(255);
     bgColor = ofColor(0);    
@@ -134,6 +134,10 @@ void ofApp::keyPressed(int key) {
             keystoneIndex = 1;
         } else if (key == '5') {
             loadKeystoneVertsOrig();
+			fontLeftMargin = fontLeftMarginOrig * (float)width;
+			fontTopMargin = fontTopMarginOrig * (float)height;
+			fontSelector = 0;
+			fontSize = fontSizeOrig;
         } else if (keyIsArrow(key)){
             keystoneVertex(keystoneIndex, key);
         } else if (!keyIsNumber(key)) {
@@ -188,19 +192,19 @@ void ofApp::keystoneVertex(int index, int key) {
 }
 
 void ofApp::saveKeystoneSettings() {
-	ofVec3f v0 = plane1.getMesh().getVertex(0);
-	ofVec3f v1 = plane1.getMesh().getVertex(1);
-	ofVec3f v2 = plane1.getMesh().getVertex(2);
-	ofVec3f v3 = plane1.getMesh().getVertex(3);
+	ofVec3f v0 = plane1.getMesh().getVertex(2);
+	ofVec3f v1 = plane1.getMesh().getVertex(3);
+	ofVec3f v2 = plane1.getMesh().getVertex(0);
+	ofVec3f v3 = plane1.getMesh().getVertex(1);
 
 	float x0 = v0.x / (float)halfWidth;
-	float y0 = v0.y / (float)halfHeight;
+	float y0 = -v0.y / (float)halfHeight;
 	float x1 = v1.x / (float)halfWidth;
-	float y1 = v1.y / (float)halfHeight;
+	float y1 = -v1.y / (float)halfHeight;
 	float x2 = v2.x / (float)halfWidth;
-	float y2 = v2.y / (float)halfHeight;
+	float y2 = -v2.y / (float)halfHeight;
 	float x3 = v3.x / (float)halfWidth;
-	float y3 = v3.y / (float)halfHeight;
+	float y3 = -v3.y / (float)halfHeight;
 
 	settings.setValue("settings:key_x0", x0);
 	settings.setValue("settings:key_y0", y0);
@@ -261,9 +265,7 @@ void ofApp::initFonts() {
 }
 
 void ofApp::refreshFonts() {
-	for (int i = 0; i < fontsList.size(); i++) {
-		fonts[i].loadFont(fontsList[i], fontSize, true, true);
-	}
+	fonts[fontSelector].loadFont(fontsList[fontSelector], fontSize, true, true);
 }
 
 //--------------------------------------------------------------
@@ -334,6 +336,11 @@ bool ofApp::keyIsControlOrCommand(int key) {
 
 void ofApp::saveSettings() {
 	saveKeystoneSettings();
+	settings.setValue("settings:font_left_margin", fontLeftMargin / (float) width);
+	settings.setValue("settings:font_top_margin", fontTopMargin / (float) height);
+	settings.setValue("settings:font_selector", fontSelector);
+	settings.setValue("settings:font_size", fontSize);
+	settings.setValue("settings:display_string", displayString);
 
 	settings.saveFile("settings.xml");
 }
