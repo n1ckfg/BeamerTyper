@@ -202,14 +202,14 @@ void ofApp::saveKeystoneSettings() {
 	float x3 = v3.x / (float)halfWidth;
 	float y3 = v3.y / (float)halfHeight;
 
-	settings.setValue("settings:key_x0", -abs(x2));
-	settings.setValue("settings:key_y0", -abs(y2));
-	settings.setValue("settings:key_x1", x3);
-	settings.setValue("settings:key_y1", y3);
-	settings.setValue("settings:key_x2", x0);
-	settings.setValue("settings:key_y2", y0);
-	settings.setValue("settings:key_x3", x1);
-	settings.setValue("settings:key_y3", y1);
+	settings.setValue("settings:key_x0", x0);
+	settings.setValue("settings:key_y0", y0);
+	settings.setValue("settings:key_x1", x1);
+	settings.setValue("settings:key_y1", y1);
+	settings.setValue("settings:key_x2", x2);
+	settings.setValue("settings:key_y2", y2);
+	settings.setValue("settings:key_x3", x3);
+	settings.setValue("settings:key_y3", y3);
 }
 
 void ofApp::loadKeystoneSettings() {
@@ -223,7 +223,6 @@ void ofApp::loadKeystoneSettings() {
 	float y2 = (float) settings.getValue("settings:key_y2", 1) * (float) halfHeight;
 	float x3 = (float) settings.getValue("settings:key_x3", 1) * (float) halfWidth;
 	float y3 = (float) settings.getValue("settings:key_y3", 1) * (float) halfHeight;
-	cout << "!!!!" << x0 << endl;
 
 	ofVec3f v2 = ofVec3f(x0, y0, 0);
 	ofVec3f v3 = ofVec3f(x1, y1, 0);
