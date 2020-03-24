@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxXmlSettings.h"
 
 class ofApp : public ofBaseApp {
     
@@ -14,7 +15,8 @@ class ofApp : public ofBaseApp {
 		void keyPressed(int key);
 		void keyReleased(int key);
 
-		string displayString = "";
+		string displayString;
+		ofxXmlSettings settings;
 
         enum ModeSelector { KEYSTONE, EDIT };
         ModeSelector modeSelector;
@@ -54,6 +56,14 @@ class ofApp : public ofBaseApp {
 
         bool keyIsArrow(int key);
         bool keyIsNumber(int key);
+		bool keyIsControl(int key);
+		bool keyIsCommand(int key);
+		bool keyIsAlt(int key);
+		bool keyIsShift(int key);
+		bool keyIsModifier(int key);
+		bool keyIsControlOrCommand(int key);
+
+		bool ctrlIsPressed = false;
 
 		void textStartPoint(int key);
 };

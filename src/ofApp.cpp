@@ -2,7 +2,9 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-    width = ofGetWidth();
+	settings.loadFile("settings.xml");
+	
+	width = ofGetWidth();
     height = ofGetHeight();
 	ofHideCursor();
 
@@ -31,10 +33,10 @@ void ofApp::setup() {
 
     bgColor = ofColor(0);
     
-    fontSize = 72;
+    fontSize = settings.getValue("settings:font_size", 72);
     fontLineHeight = 68.0f;
     fontLetterSpacing = 1.035;
-    fontSelector = 0;
+    fontSelector = settings.getValue("settings:font_selector", 0);
     fontSizeChangeIncrement = 4;
 
 	fontsList.push_back("fonts/verdana.ttf");
@@ -45,11 +47,13 @@ void ofApp::setup() {
     
     initFonts();   
   
-    fontLeftMargin = 90;
-    fontTopMargin = (height/2) + (fontSize/2);
+    fontLeftMargin = (float) width * settings.getValue("settings:font_left_margin", 0.05);
+    fontTopMargin = (float) height * settings.getValue("settings:font_top_margin", 0.5);
     
     fontColor = ofColor(255);
     bgColor = ofColor(0);    
+
+	displayString = settings.getValue("settings:display_string", "...");
 }
 
 //--------------------------------------------------------------
@@ -94,7 +98,13 @@ void ofApp::draw() {
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key) { 
+void ofApp::keyPressed(int key) {
+	if (keyIsControlOrCommand(key)) ctrlIsPressed = true;
+
+	if (ctrlIsPressed && (key == 's' || key == 'S')) {
+		// TODO save settings
+	}
+
     if (modeSelector == EDIT) {
         if (key == OF_KEY_DEL || key == OF_KEY_BACKSPACE) {
             if (displayString.length() > 0) {
@@ -106,7 +116,7 @@ void ofApp::keyPressed(int key) {
 			modeSelector = KEYSTONE;
 		} else if (keyIsArrow(key)) {
 			textStartPoint(key);
-		} else if (key == OF_KEY_TAB || key == OF_KEY_PAGE_UP || key == OF_KEY_PAGE_DOWN || key == OF_KEY_LEFT_SHIFT || key == OF_KEY_RIGHT_SHIFT || key == OF_KEY_CONTROL || key == OF_KEY_ALT) { 
+		} else if (key == OF_KEY_TAB || key == OF_KEY_PAGE_UP || key == OF_KEY_PAGE_DOWN || keyIsModifier(key)) { 
 			// filter unwanted keys here
 		} else {
 			displayString.append(1, (char)key);
@@ -124,13 +134,15 @@ void ofApp::keyPressed(int key) {
             loadKeystoneVertsOrig();
         } else if (keyIsArrow(key)){
             keystoneVertex(keystoneIndex, key);
-        } else {
+        } else if (!keyIsNumber(key)) {
             modeSelector = EDIT;
         }
      }
 }
 
 void ofApp::keyReleased(int key) {
+	if (keyIsControlOrCommand(key)) ctrlIsPressed = false;
+
 	if (modeSelector == EDIT) {
 		if (key == OF_KEY_PAGE_DOWN) {
 			fontSize -= fontSizeChangeIncrement;
@@ -179,6 +191,7 @@ void ofApp::saveKeystoneVertsOrig() {
     for (int i=0; i<plane1.getMesh().getVertices().size(); i++) {
         ofVec3f v = plane1.getMesh().getVertex(i);
         keystoneVertsOrig.push_back(v);
+		cout << "vertex " << i << ". " << v << endl;
     }
 }
 
@@ -222,4 +235,52 @@ bool ofApp::keyIsNumber(int key) {
     } else {
         return false;
     }
+}
+
+bool ofApp::keyIsControl(int key) {
+	if (key == OF_KEY_CONTROL || key == OF_KEY_RIGHT_CONTROL || key == OF_KEY_LEFT_CONTROL) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool ofApp::keyIsCommand(int key) {
+	if (key == OF_KEY_COMMAND || key == OF_KEY_RIGHT_COMMAND || key == OF_KEY_LEFT_COMMAND) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool ofApp::keyIsAlt(int key) {
+	if (key == OF_KEY_ALT || key == OF_KEY_RIGHT_ALT || key == OF_KEY_LEFT_ALT) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool ofApp::keyIsShift(int key) {
+	if (key == OF_KEY_SHIFT || key == OF_KEY_RIGHT_SHIFT || key == OF_KEY_LEFT_SHIFT) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool ofApp::keyIsModifier(int key) {
+	if (keyIsControl(key) || keyIsCommand(key) || keyIsAlt(key) || keyIsShift(key)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool ofApp::keyIsControlOrCommand(int key) {
+	if (keyIsControl(key) || keyIsCommand(key)) {
+		return true;
+	} else {
+		return false;
+	}
 }

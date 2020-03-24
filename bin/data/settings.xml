@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<settings>
+	<key_x1>-1</key_x1>
+	<key_y1>-1</key_y1>
+	<key_x2>1</key_x2>
+	<key_y2>-1</key_y2>
+	<key_x3>-1</key_x3>
+	<key_y3>1</key_y3>
+	<key_x4>1</key_x4>
+	<key_y4>1</key_y4>
+	<font_left_margin>0.05</font_left_margin>
+	<font_top_margin>0.5</font_top_margin>
+	<font_selector>0</font_selector>
+	<font_size>72</font_size>
+	<display_string>...</display_string>
+</settings>
