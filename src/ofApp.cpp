@@ -219,14 +219,14 @@ void ofApp::saveKeystoneSettings() {
 void ofApp::loadKeystoneSettings() {
 	saveKeystoneVertsOrig();
 
-	float x0 = (float) settings.getValue("settings:key_x0", -1) * (float) halfWidth;
-	float y0 = (float) settings.getValue("settings:key_y0", -1) * (float) halfHeight;
-	float x1 = (float) settings.getValue("settings:key_x1", 1) * (float) halfWidth;
-	float y1 = (float) settings.getValue("settings:key_y1", -1) * (float) halfHeight;
-	float x2 = (float) settings.getValue("settings:key_x2", -1) * (float) halfWidth;
-	float y2 = (float) settings.getValue("settings:key_y2", 1) * (float) halfHeight;
-	float x3 = (float) settings.getValue("settings:key_x3", 1) * (float) halfWidth;
-	float y3 = (float) settings.getValue("settings:key_y3", 1) * (float) halfHeight;
+	float x0 = (float) settings.getValue("settings:key_x0", -1.0) * (float) halfWidth;
+	float y0 = (float) settings.getValue("settings:key_y0", -1.0) * (float) halfHeight;
+	float x1 = (float) settings.getValue("settings:key_x1", 1.0) * (float) halfWidth;
+	float y1 = (float) settings.getValue("settings:key_y1", -1.0) * (float) halfHeight;
+	float x2 = (float) settings.getValue("settings:key_x2", -1.0) * (float) halfWidth;
+	float y2 = (float) settings.getValue("settings:key_y2", 1.0) * (float) halfHeight;
+	float x3 = (float) settings.getValue("settings:key_x3", 1.0) * (float) halfWidth;
+	float y3 = (float) settings.getValue("settings:key_y3", 1.0) * (float) halfHeight;
 
 	ofVec3f v0 = ofVec3f(x0, y0, 0);
 	ofVec3f v1 = ofVec3f(x1, y1, 0);
