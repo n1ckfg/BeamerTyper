@@ -11,7 +11,8 @@ class ofApp : public ofBaseApp {
         void setup();
         void update();
         void draw();       
-        void keyPressed(int key);
+		void keyPressed(int key);
+		void keyReleased(int key);
 
 		string displayString = "";
 
@@ -23,8 +24,9 @@ class ofApp : public ofBaseApp {
 
         vector<string> fontsList;
         vector<ofTrueTypeFont> fonts;
-        void initFonts();
-        
+		void initFonts();
+		void refreshFonts();
+
         int fontSelector;
     
         int fontSize;

@@ -106,10 +106,10 @@ void ofApp::keyPressed(int key) {
 			modeSelector = KEYSTONE;
 		} else if (keyIsArrow(key)) {
 			textStartPoint(key);
+		} else if (key == OF_KEY_TAB || key == OF_KEY_PAGE_UP || key == OF_KEY_PAGE_DOWN || key == OF_KEY_LEFT_SHIFT || key == OF_KEY_RIGHT_SHIFT || key == OF_KEY_CONTROL || key == OF_KEY_ALT) { 
+			// filter unwanted keys here
 		} else {
-			if (key != OF_KEY_LEFT_SHIFT && key != OF_KEY_RIGHT_SHIFT && key != OF_KEY_CONTROL && key != OF_KEY_ALT) { // filter unwanted keys here
-				displayString.append(1, (char)key);
-			}
+			displayString.append(1, (char)key);
 		}
     } else if (modeSelector == KEYSTONE) {
         if (key == '1') {
@@ -128,6 +128,22 @@ void ofApp::keyPressed(int key) {
             modeSelector = EDIT;
         }
      }
+}
+
+void ofApp::keyReleased(int key) {
+	if (modeSelector == EDIT) {
+		if (key == OF_KEY_PAGE_DOWN) {
+			fontSize -= fontSizeChangeIncrement;
+			if (fontSize < 10) fontSize = 10;
+			refreshFonts();
+		} else if (key == OF_KEY_PAGE_UP) {
+			fontSize += fontSizeChangeIncrement;
+			refreshFonts();
+		} else if (key == OF_KEY_TAB) {
+			fontSelector++;
+			if (fontSelector > fonts.size() - 1) fontSelector = 0;
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -182,6 +198,12 @@ void ofApp::initFonts() {
         fonts[i].setLineHeight(fontLineHeight);
         fonts[i].setLetterSpacing(fontLetterSpacing);
     }
+}
+
+void ofApp::refreshFonts() {
+	for (int i = 0; i < fontsList.size(); i++) {
+		fonts[i].loadFont(fontsList[i], fontSize, true, true);
+	}
 }
 
 //--------------------------------------------------------------
