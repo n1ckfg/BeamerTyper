@@ -6,6 +6,9 @@ void ofApp::setup() {
 	
 	width = ofGetWidth();
     height = ofGetHeight();
+	halfWidth = width / 2;
+	halfHeight = height / 2;
+
 	ofHideCursor();
 
     checkerboard.load("textures/checkerboard.png");
@@ -19,7 +22,8 @@ void ofApp::setup() {
     plane1.setResolution(2, 2); // this resolution (as columns and rows) is enough
     plane1.mapTexCoordsFromTexture(fbo1.getTexture()); // *** don't forget this ***
     
-    saveKeystoneVertsOrig();
+	loadKeystoneSettings();
+
     keystoneStep = 10;
     keystoneIndex = 2; // upper left
     keystoneHandleColor = ofColor(255,0,0);
@@ -99,10 +103,8 @@ void ofApp::draw() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
-	if (keyIsControlOrCommand(key)) ctrlIsPressed = true;
-
-	if (ctrlIsPressed && (key == 's' || key == 'S')) {
-		// TODO save settings
+	if (key == OF_KEY_HOME || key == OF_KEY_END) {
+		saveSettings();
 	}
 
     if (modeSelector == EDIT) {
@@ -141,8 +143,6 @@ void ofApp::keyPressed(int key) {
 }
 
 void ofApp::keyReleased(int key) {
-	if (keyIsControlOrCommand(key)) ctrlIsPressed = false;
-
 	if (modeSelector == EDIT) {
 		if (key == OF_KEY_PAGE_DOWN) {
 			fontSize -= fontSizeChangeIncrement;
@@ -187,15 +187,63 @@ void ofApp::keystoneVertex(int index, int key) {
     plane1.getMesh().setVertex(index, v);
 }
 
+void ofApp::saveKeystoneSettings() {
+	ofVec3f v0 = plane1.getMesh().getVertex(0);
+	ofVec3f v1 = plane1.getMesh().getVertex(1);
+	ofVec3f v2 = plane1.getMesh().getVertex(2);
+	ofVec3f v3 = plane1.getMesh().getVertex(3);
+
+	float x0 = v0.x / (float)halfWidth;
+	float y0 = v0.y / (float)halfHeight;
+	float x1 = v1.x / (float)halfWidth;
+	float y1 = v1.y / (float)halfHeight;
+	float x2 = v2.x / (float)halfWidth;
+	float y2 = v2.y / (float)halfHeight;
+	float x3 = v3.x / (float)halfWidth;
+	float y3 = v3.y / (float)halfHeight;
+
+	settings.setValue("settings:key_x0", -abs(x2));
+	settings.setValue("settings:key_y0", -abs(y2));
+	settings.setValue("settings:key_x1", x3);
+	settings.setValue("settings:key_y1", y3);
+	settings.setValue("settings:key_x2", x0);
+	settings.setValue("settings:key_y2", y0);
+	settings.setValue("settings:key_x3", x1);
+	settings.setValue("settings:key_y3", y1);
+}
+
+void ofApp::loadKeystoneSettings() {
+	saveKeystoneVertsOrig();
+
+	float x0 = (float) settings.getValue("settings:key_x0", -1) * (float) halfWidth;
+	float y0 = (float) settings.getValue("settings:key_y0", -1) * (float) halfHeight;
+	float x1 = (float) settings.getValue("settings:key_x1", 1) * (float) halfWidth;
+	float y1 = (float) settings.getValue("settings:key_y1", -1) * (float) halfHeight;
+	float x2 = (float) settings.getValue("settings:key_x2", -1) * (float) halfWidth;
+	float y2 = (float) settings.getValue("settings:key_y2", 1) * (float) halfHeight;
+	float x3 = (float) settings.getValue("settings:key_x3", 1) * (float) halfWidth;
+	float y3 = (float) settings.getValue("settings:key_y3", 1) * (float) halfHeight;
+	cout << "!!!!" << x0 << endl;
+
+	ofVec3f v2 = ofVec3f(x0, y0, 0);
+	ofVec3f v3 = ofVec3f(x1, y1, 0);
+	ofVec3f v0 = ofVec3f(x2, y2, 0);
+	ofVec3f v1 = ofVec3f(x3, y3, 0);
+
+	plane1.getMesh().setVertex(0, v0);
+	plane1.getMesh().setVertex(1, v1);
+	plane1.getMesh().setVertex(2, v2);
+	plane1.getMesh().setVertex(3, v3);
+}
+
 void ofApp::saveKeystoneVertsOrig() {
     for (int i=0; i<plane1.getMesh().getVertices().size(); i++) {
         ofVec3f v = plane1.getMesh().getVertex(i);
         keystoneVertsOrig.push_back(v);
-		cout << "vertex " << i << ". " << v << endl;
-    }
+		cout << "v" << i << ": " << keystoneVertsOrig[i] << endl;
+	}
 }
 
-//--------------------------------------------------------------
 void ofApp::loadKeystoneVertsOrig() {
     for (int i=0; i<keystoneVertsOrig.size(); i++) {
         plane1.getMesh().setVertex(i, keystoneVertsOrig[i]);
@@ -283,4 +331,10 @@ bool ofApp::keyIsControlOrCommand(int key) {
 	} else {
 		return false;
 	}
+}
+
+void ofApp::saveSettings() {
+	saveKeystoneSettings();
+
+	settings.saveFile("settings.xml");
 }

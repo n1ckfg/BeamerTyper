@@ -6,8 +6,7 @@
 class ofApp : public ofBaseApp {
     
     public:
-        int width;
-        int height;
+        int width, height, halfWidth, halfHeight;
     
         void setup();
         void update();
@@ -48,9 +47,13 @@ class ofApp : public ofBaseApp {
         float keystoneStep;
         void keystoneVertex(int index, int key);
         vector<ofVec3f> keystoneVertsOrig;
+
         void saveKeystoneVertsOrig();
         void loadKeystoneVertsOrig();
-        int keystoneHandleSize;
+		void saveKeystoneSettings();
+		void loadKeystoneSettings();
+
+		int keystoneHandleSize;
         int keystoneHandleStroke;
         ofColor keystoneHandleColor;
 
@@ -63,8 +66,9 @@ class ofApp : public ofBaseApp {
 		bool keyIsModifier(int key);
 		bool keyIsControlOrCommand(int key);
 
-		bool ctrlIsPressed = false;
-
 		void textStartPoint(int key);
+
+		void saveSettings();
+
 };
 
