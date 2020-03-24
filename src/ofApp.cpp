@@ -4,7 +4,8 @@
 void ofApp::setup() {
     width = ofGetWidth();
     height = ofGetHeight();
-    
+	ofHideCursor();
+
     checkerboard.load("textures/checkerboard.png");
          
     fbo1.allocate(width, height, GL_RGBA);
