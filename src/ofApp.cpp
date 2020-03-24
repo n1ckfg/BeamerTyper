@@ -14,7 +14,11 @@ void ofApp::setup() {
     checkerboard.load("textures/checkerboard.png");
          
     fbo1.allocate(width, height, GL_RGBA);
-    fbo2.allocate(width, height, GL_RGBA);
+	// a nested fbo may need to be flipped vertically
+	// https://forum.openframeworks.cc/t/flipping-fbo-or-its-texture-upside-down/19021/3
+	//fbo1.getTextureReference().getTextureData().bFlipTexture = true;
+    
+	fbo2.allocate(width, height, GL_RGBA);
 
     plane1.set(width, height);   // dimensions for width and height in pixels
     plane1.setPosition(width/2, height/2, 0); // position in x y z
@@ -25,7 +29,7 @@ void ofApp::setup() {
 	loadKeystoneSettings();
 
     keystoneStep = 10;
-    keystoneIndex = 2; // upper left
+    keystoneIndex = 0; // upper left
     keystoneHandleColor = ofColor(255,0,0);
     keystoneHandleSize = 50;
     keystoneHandleStroke = 10;
@@ -84,7 +88,7 @@ void ofApp::update() {
     fbo1.getTexture().unbind();
 
     if (modeSelector == KEYSTONE) {
-        ofVec2f center = ofVec2f(plane1.getMesh().getVertex(keystoneIndex).x + plane1.getPosition().x, fbo2.getHeight() - (plane1.getMesh().getVertex(keystoneIndex).y + plane1.getPosition().y));
+        ofVec2f center = ofVec2f(plane1.getMesh().getVertex(keystoneIndex).x + plane1.getPosition().x, fbo1.getHeight() - (plane1.getMesh().getVertex(keystoneIndex).y + plane1.getPosition().y));
         ofPath circle;
         circle.setFillColor(ofColor(255,0,0));
         circle.arc(center, keystoneHandleSize + (keystoneHandleStroke/2), keystoneHandleSize + (keystoneHandleStroke/2), 0, 360);
@@ -125,25 +129,25 @@ void ofApp::keyPressed(int key) {
 		}
     } else if (modeSelector == KEYSTONE) {
         if (key == '1') {
-            keystoneIndex = 2;
-        } else if (key == '2') {
-            keystoneIndex = 3;
-        } else if (key == '3') {
             keystoneIndex = 0;
-        } else if (key == '4') {
+        } else if (key == '2') {
             keystoneIndex = 1;
+        } else if (key == '3') {
+            keystoneIndex = 2;
+        } else if (key == '4') {
+            keystoneIndex = 3;
         } else if (key == '5') {
             loadKeystoneVertsOrig();
 			fontLeftMargin = fontLeftMarginOrig * (float)width;
 			fontTopMargin = fontTopMarginOrig * (float)height;
 			fontSelector = 0;
 			fontSize = fontSizeOrig;
-        } else if (keyIsArrow(key)){
+        } else if (keyIsArrow(key)) {
             keystoneVertex(keystoneIndex, key);
         } else if (!keyIsNumber(key)) {
             modeSelector = EDIT;
         }
-     }
+    }
 }
 
 void ofApp::keyReleased(int key) {
@@ -192,19 +196,19 @@ void ofApp::keystoneVertex(int index, int key) {
 }
 
 void ofApp::saveKeystoneSettings() {
-	ofVec3f v0 = plane1.getMesh().getVertex(2);
-	ofVec3f v1 = plane1.getMesh().getVertex(3);
-	ofVec3f v2 = plane1.getMesh().getVertex(0);
-	ofVec3f v3 = plane1.getMesh().getVertex(1);
+	ofVec3f v0 = plane1.getMesh().getVertex(0);
+	ofVec3f v1 = plane1.getMesh().getVertex(1);
+	ofVec3f v2 = plane1.getMesh().getVertex(2);
+	ofVec3f v3 = plane1.getMesh().getVertex(3);
 
 	float x0 = v0.x / (float)halfWidth;
-	float y0 = -v0.y / (float)halfHeight;
+	float y0 = v0.y / (float)halfHeight;
 	float x1 = v1.x / (float)halfWidth;
-	float y1 = -v1.y / (float)halfHeight;
+	float y1 = v1.y / (float)halfHeight;
 	float x2 = v2.x / (float)halfWidth;
-	float y2 = -v2.y / (float)halfHeight;
+	float y2 = v2.y / (float)halfHeight;
 	float x3 = v3.x / (float)halfWidth;
-	float y3 = -v3.y / (float)halfHeight;
+	float y3 = v3.y / (float)halfHeight;
 
 	settings.setValue("settings:key_x0", x0);
 	settings.setValue("settings:key_y0", y0);
