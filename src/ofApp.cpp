@@ -9,6 +9,11 @@ void ofApp::setup() {
 	halfWidth = width / 2;
 	halfHeight = height / 2;
 
+	corner0 = 0;
+	corner1 = 1;
+	corner2 = 2;
+	corner3 = 3;
+
 	ofHideCursor();
 
     checkerboard.load("textures/checkerboard.png");
@@ -23,7 +28,7 @@ void ofApp::setup() {
     plane1.set(width, height);   // dimensions for width and height in pixels
     plane1.setPosition(width/2, height/2, 0); // position in x y z
     plane1.setOrientation(glm::vec3(180,0,0));
-    plane1.setResolution(2, 2); // this resolution (as columns and rows) is enough
+    plane1.setResolution(2, 2); // resolution as columns and rows
     plane1.mapTexCoordsFromTexture(fbo1.getTexture()); // *** don't forget this ***
     
 	loadKeystoneSettings();
@@ -123,13 +128,13 @@ void ofApp::keyPressed(int key) {
 		}
     } else if (modeSelector == KEYSTONE) {
         if (key == '1') {
-            keystoneIndex = 2;
+            keystoneIndex = corner2;
         } else if (key == '2') {
-            keystoneIndex = 3;
+            keystoneIndex = corner3;
         } else if (key == '3') {
-            keystoneIndex = 0;
+            keystoneIndex = corner0;
         } else if (key == '4') {
-            keystoneIndex = 1;
+            keystoneIndex = corner1;
         } else if (keyIsArrow(key)) {
             keystoneVertex(keystoneIndex, key);
         } else if (!keyIsNumber(key) && key != OF_KEY_END) {
@@ -186,16 +191,29 @@ void ofApp::keystoneVertex(int index, int key) {
         v.x -= keystoneStep;
     } else if (key == OF_KEY_RIGHT) {
         v.x += keystoneStep;
-    }
-    
-    plane1.getMesh().setVertex(index, v);
+    }  
+
+	plane1.getMesh().setVertex(index, v);
+	ofVec3f v1 = plane1.getMesh().getVertex(index);
+
+	for (int i = 0; i < plane1.getMesh().getNumVertices(); i++) {
+		if (i != index) {
+			ofVec3f v2 = plane1.getMesh().getVertex(i);
+			float s = (((float)width - v1.distance(v2)) / (float)width) * 0.001;
+			cout << s << endl;
+			float x = ofLerp(v2.x, v1.x, s);
+			float y = ofLerp(v2.y, v1.y, s);
+
+			plane1.getMesh().setVertex(i, ofVec3f(x, y, 0));
+		}
+	}
 }
 
 void ofApp::saveKeystoneSettings() {
-	ofVec3f v0 = plane1.getMesh().getVertex(0);
-	ofVec3f v1 = plane1.getMesh().getVertex(1);
-	ofVec3f v2 = plane1.getMesh().getVertex(2);
-	ofVec3f v3 = plane1.getMesh().getVertex(3);
+	ofVec3f v0 = plane1.getMesh().getVertex(corner0);
+	ofVec3f v1 = plane1.getMesh().getVertex(corner1);
+	ofVec3f v2 = plane1.getMesh().getVertex(corner2);
+	ofVec3f v3 = plane1.getMesh().getVertex(corner3);
 
 	float x0 = v0.x / (float)halfWidth;
 	float y0 = v0.y / (float)halfHeight;
@@ -233,10 +251,10 @@ void ofApp::loadKeystoneSettings() {
 	ofVec3f v2 = ofVec3f(x2, y2, 0);
 	ofVec3f v3 = ofVec3f(x3, y3, 0);
 
-	plane1.getMesh().setVertex(0, v0);
-	plane1.getMesh().setVertex(1, v1);
-	plane1.getMesh().setVertex(2, v2);
-	plane1.getMesh().setVertex(3, v3);
+	plane1.getMesh().setVertex(corner0, v0);
+	plane1.getMesh().setVertex(corner1, v1);
+	plane1.getMesh().setVertex(corner2, v2);
+	plane1.getMesh().setVertex(corner3, v3);
 }
 
 void ofApp::saveKeystoneVertsOrig() {

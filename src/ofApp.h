@@ -50,6 +50,7 @@ class ofApp : public ofBaseApp {
         float keystoneStep;
         void keystoneVertex(int index, int key);
         vector<ofVec3f> keystoneVertsOrig;
+		int corner0, corner1, corner2, corner3;
 
         void saveKeystoneVertsOrig();
         void loadKeystoneVertsOrig();
