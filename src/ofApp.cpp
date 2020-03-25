@@ -9,10 +9,11 @@ void ofApp::setup() {
 	halfWidth = width / 2;
 	halfHeight = height / 2;
 
+    vertsPerSide = 2;
 	corner0 = 0;
-	corner1 = 1;
-	corner2 = 2;
-	corner3 = 3;
+	corner1 = vertsPerSide - 1;
+	corner2 = vertsPerSide * (vertsPerSide - 1);
+	corner3 = (vertsPerSide * vertsPerSide) - 1;
 
 	ofHideCursor();
 
@@ -28,7 +29,7 @@ void ofApp::setup() {
     plane1.set(width, height);   // dimensions for width and height in pixels
     plane1.setPosition(width/2, height/2, 0); // position in x y z
     plane1.setOrientation(glm::vec3(180,0,0));
-    plane1.setResolution(2, 2); // resolution as columns and rows
+    plane1.setResolution(vertsPerSide, vertsPerSide); // resolution as columns and rows
     plane1.mapTexCoordsFromTexture(fbo1.getTexture()); // *** don't forget this ***
     
 	loadKeystoneSettings();
@@ -218,7 +219,7 @@ void ofApp::keystoneVertex(int index, int key) {
 }
 
 ofVec3f ofApp::warpGrid(ofVec3f v1, ofVec3f v2) {
-	float s = (((float)width - v1.distance(v2)) / (float)width) * 0.001;
+	float s = (((float)width - v1.distance(v2)) / (float)width) * warpForce;
 	float x = ofLerp(v2.x, v1.x, s);
 	float y = ofLerp(v2.y, v1.y, s);
 	return ofVec3f(x, y, 0);

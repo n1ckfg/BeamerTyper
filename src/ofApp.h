@@ -51,7 +51,9 @@ class ofApp : public ofBaseApp {
         void keystoneVertex(int index, int key);
         vector<ofVec3f> keystoneVertsOrig;
 		int corner0, corner1, corner2, corner3;
-
+        int vertsPerSide;
+        float warpForce = 0.001;
+    
         void saveKeystoneVertsOrig();
         void loadKeystoneVertsOrig();
 		void saveKeystoneSettings();

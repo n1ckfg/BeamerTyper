@@ -12,5 +12,5 @@
     <font_top_margin>0.500000000</font_top_margin>
     <font_selector>0</font_selector>
     <font_size>72</font_size>
-    <display_string>Testing testing 1 2 3.....</display_string>
+    <display_string>Testing testing 1 2 3.....&#x13;&#x12;</display_string>
 </settings>
