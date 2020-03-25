@@ -157,12 +157,14 @@ void ofApp::keyPressed(int key) {
 }
 
 void ofApp::keyReleased(int key) {
-	if (key == OF_KEY_HOME) {
+	if (key == OF_KEY_F6) {
 		saveSettings();
-	} else if (key == OF_KEY_END) {
+	} else if (key == OF_KEY_F9) {
 		init();
-	} else if (keyIsAlt(key)) {
+	} else if (key == OF_KEY_HOME) {
 		modeSelector = KEYSTONE;
+	} else if (key == OF_KEY_END) {
+		modeSelector = EDIT;
 	}
 
 	if (modeSelector == EDIT) {
