@@ -94,12 +94,6 @@ void ofApp::update() {
 
     if (modeSelector == KEYSTONE) {
 		ofVec2f center = ofVec2f(plane1.getMesh().getVertex(keystoneIndex).x + plane1.getPosition().x, fbo1.getHeight() - (plane1.getMesh().getVertex(keystoneIndex).y + plane1.getPosition().y));
-
-		for (int i = 0; i < plane1.getMesh().getNumVertices(); i++) {
-			ofVec2f v = getDistance(center, plane1.getMesh().getVertex(i));
-			ofSetColor(0, 255, 0);
-			ofLine(center.x, center.y, v.x + plane1.getPosition().x, fbo1.getHeight() - (v.y + plane1.getPosition().y));
-	    }
 		
         ofPath circle;
         circle.setFillColor(ofColor(255,0,0));
@@ -107,6 +101,17 @@ void ofApp::update() {
         circle.close();
         circle.arc(center, keystoneHandleSize - (keystoneHandleStroke/2), keystoneHandleSize - (keystoneHandleStroke/2), 0, 360);
         circle.draw();
+        
+        for (int i = 0; i < plane1.getMesh().getNumVertices(); i++) {
+            ofVec2f v = warpGrid(center, plane1.getMesh().getVertex(i));
+            ofSetColor(0, 255, 0);
+            
+            float x = v.x + plane1.getPosition().x;
+            float y = fbo1.getHeight() - (v.y + plane1.getPosition().y);
+            ofLine(center.x, center.y, x, y);
+            
+            fonts[fontSelector].drawString(ofToString(i), x, y);
+        }
     }
     fbo2.end();
 }
@@ -207,18 +212,17 @@ void ofApp::keystoneVertex(int index, int key) {
 		if (i != index) {
 			ofVec3f v2 = plane1.getMesh().getVertex(i);
 
-			plane1.getMesh().setVertex(i, getDistance(v1, v2));
+			plane1.getMesh().setVertex(i, warpGrid(v1, v2));
 		}
 	}
 }
 
-ofVec3f ofApp::getDistance(ofVec3f v1, ofVec3f v2) {
+ofVec3f ofApp::warpGrid(ofVec3f v1, ofVec3f v2) {
 	float s = (((float)width - v1.distance(v2)) / (float)width) * 0.001;
 	float x = ofLerp(v2.x, v1.x, s);
 	float y = ofLerp(v2.y, v1.y, s);
 	return ofVec3f(x, y, 0);
 }
-
 
 void ofApp::saveKeystoneSettings() {
 	ofVec3f v0 = plane1.getMesh().getVertex(corner0);

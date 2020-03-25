@@ -73,7 +73,8 @@ class ofApp : public ofBaseApp {
 
 		void saveSettings();
 
-		ofVec3f getDistance(ofVec3f v1, ofVec3f v2);
+        ofVec3f warpGrid(ofVec3f v1, ofVec3f v2);
+        void showWarp(ofVec3f v1, ofVec3f v2);
 
 		void init();
 
