@@ -81,7 +81,7 @@ void ofApp::update() {
     } else if (modeSelector == KEYSTONE) {
         ofSetColor(255);
         checkerboard.draw(0,0,width,height);
-    }
+	}
     ofSetColor(255); // why does this work?
     fbo1.end();
 
@@ -93,7 +93,14 @@ void ofApp::update() {
     fbo1.getTexture().unbind();
 
     if (modeSelector == KEYSTONE) {
-        ofVec2f center = ofVec2f(plane1.getMesh().getVertex(keystoneIndex).x + plane1.getPosition().x, fbo1.getHeight() - (plane1.getMesh().getVertex(keystoneIndex).y + plane1.getPosition().y));
+		ofVec2f center = ofVec2f(plane1.getMesh().getVertex(keystoneIndex).x + plane1.getPosition().x, fbo1.getHeight() - (plane1.getMesh().getVertex(keystoneIndex).y + plane1.getPosition().y));
+
+		for (int i = 0; i < plane1.getMesh().getNumVertices(); i++) {
+			ofVec2f v = getDistance(center, plane1.getMesh().getVertex(i));
+			ofSetColor(0, 255, 0);
+			ofLine(center.x, center.y, v.x + plane1.getPosition().x, fbo1.getHeight() - (v.y + plane1.getPosition().y));
+	    }
+		
         ofPath circle;
         circle.setFillColor(ofColor(255,0,0));
         circle.arc(center, keystoneHandleSize + (keystoneHandleStroke/2), keystoneHandleSize + (keystoneHandleStroke/2), 0, 360);
@@ -199,14 +206,19 @@ void ofApp::keystoneVertex(int index, int key) {
 	for (int i = 0; i < plane1.getMesh().getNumVertices(); i++) {
 		if (i != index) {
 			ofVec3f v2 = plane1.getMesh().getVertex(i);
-			float s = (((float)width - v1.distance(v2)) / (float)width) * 0.001;
-			float x = ofLerp(v2.x, v1.x, s);
-			float y = ofLerp(v2.y, v1.y, s);
 
-			plane1.getMesh().setVertex(i, ofVec3f(x, y, 0));
+			plane1.getMesh().setVertex(i, getDistance(v1, v2));
 		}
 	}
 }
+
+ofVec3f ofApp::getDistance(ofVec3f v1, ofVec3f v2) {
+	float s = (((float)width - v1.distance(v2)) / (float)width) * 0.001;
+	float x = ofLerp(v2.x, v1.x, s);
+	float y = ofLerp(v2.y, v1.y, s);
+	return ofVec3f(x, y, 0);
+}
+
 
 void ofApp::saveKeystoneSettings() {
 	ofVec3f v0 = plane1.getMesh().getVertex(corner0);
