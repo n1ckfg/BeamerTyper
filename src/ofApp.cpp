@@ -111,7 +111,27 @@ void ofApp::update() {
             float y = fbo1.getHeight() - (v.y + plane1.getPosition().y);
             ofLine(center.x, center.y, x, y);
             
-            fonts[fontSelector].drawString(ofToString(i), x, y);
+			if (i == corner2) {
+				ofSetColor(0);
+				fonts[fontSelector].drawString(ofToString(1), x + 2, y + 2);
+				ofSetColor(0, 255, 0);
+				fonts[fontSelector].drawString(ofToString(1), x, y);
+			} else if (i == corner3) {
+				ofSetColor(0);
+				fonts[fontSelector].drawString(ofToString(2), x + 2, y + 2);
+				ofSetColor(0, 255, 0);
+				fonts[fontSelector].drawString(ofToString(2), x, y);
+			} else if (i == corner0) {
+				ofSetColor(0);
+				fonts[fontSelector].drawString(ofToString(3), x + 2, y + 2);
+				ofSetColor(0, 255, 0);
+				fonts[fontSelector].drawString(ofToString(3), x, y);
+			} else if (i == corner1) {
+				ofSetColor(0);
+				fonts[fontSelector].drawString(ofToString(4), x + 2, y + 2);
+				ofSetColor(0, 255, 0);
+				fonts[fontSelector].drawString(ofToString(4), x, y);
+			}
         }
     }
     fbo2.end();
